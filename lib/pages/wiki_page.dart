@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicorum/api/models/wiki.dart';
 import 'package:musicorum/components/colored_card.dart';
 import 'package:musicorum/components/two_layered_appbar.dart';
+import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,6 +31,12 @@ class WikiPage extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: LIST_PADDING),
         children: [
+          SizedBox(
+            height: 10.0,
+          ),
+          Text('Published ${wiki.published}', style: TextStyle(
+            color: SURFACE_SECONDARY_TEXT_COLOR
+          ),),
           SizedBox(
             height: 10.0,
           ),

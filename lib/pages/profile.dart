@@ -150,11 +150,10 @@ class ProfileState extends State<Profile> {
           child: ListView(controller: widget.controller, children: [
             ContentHeader(
               loaded: loaded,
-              name: widget.user.name != null
-                  ? widget.user.name
-                  : widget.user.username,
+              name: widget.user.displayName,
               secondary: '@${widget.user.username}',
               mainImage: widget.user.images.getExtraLargeImage().image,
+              imageViewURL: widget.user.images.getImageURLFromSize(1600, 0),
               backgroundImage:
                   artistBackground != null && artistBackground.resource != null
                       ? Image.network(artistBackground.resource.image).image
@@ -344,6 +343,9 @@ class ProfileState extends State<Profile> {
                                     placeHolder: true,
                                   )
                                 ],
+                    ),
+                    SizedBox(
+                      height: 22.0,
                     )
                   ],
                 ))

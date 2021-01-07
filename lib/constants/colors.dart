@@ -9,7 +9,7 @@ const MUSICORUM_LIGHT = Color(0xffEB5757);
 
 const PLACEHOLDER_COLOR = Color(0x20ffffff);
 
-const APPBAR_COLOR = Color(0x10ffffff);
+const APPBAR_COLOR = Color(0xff1c1c1c);
 
 const GRADIENT_DEFAULT_1 = Color.fromRGBO(255, 255, 255, 0.08);
 const GRADIENT_DEFAULT_2 = Color.fromRGBO(255, 255, 255, 0.14);

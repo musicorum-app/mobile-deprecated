@@ -40,6 +40,7 @@ class LoggedInRouterState extends State<LoggedInRouter> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
+        physics: NeverScrollableScrollPhysics(),
         children: pages,
         controller: pageController,
         onPageChanged: (index) {

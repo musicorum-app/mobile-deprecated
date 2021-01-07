@@ -36,7 +36,7 @@ class WikiCard extends StatelessWidget {
             SizedBox(
               height: 6.0,
             ),
-            Text(wiki.summaryFiltered),
+            Text(wiki != null ? wiki.summaryFiltered : 'Loading...'),
             SizedBox(
               height: 6.0,
             ),

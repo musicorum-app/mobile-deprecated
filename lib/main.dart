@@ -11,12 +11,16 @@ import 'package:musicorum/states/login.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  setAppDefaultColors();
+
+  runApp(MyApp());
+}
+
+void setAppDefaultColors() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: SURFACE_SECONDARY_COLOR, // navigation bar color
     statusBarColor: Colors.transparent, // status bar color
   ));
-
-  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

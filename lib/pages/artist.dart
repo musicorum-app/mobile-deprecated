@@ -166,7 +166,7 @@ class ArtistPageState extends State<ArtistPage> {
           ),
         ),
         backgroundColor:
-            Colors.black.withAlpha((appBarVisibility * 200).toInt()),
+        APPBAR_COLOR.withAlpha((appBarVisibility * 255).toInt()),
       ),
       body: MediaQuery.removePadding(
           context: context,
@@ -176,6 +176,7 @@ class ArtistPageState extends State<ArtistPage> {
               ContentHeader(
                 loaded: true,
                 name: artist.name,
+                imageViewURL: artist.resource != null && artist.resource.image != null ? artist.resource.image : null,
                 mainImage: artist.resource != null && artist.resource.image != null ? Image.network(artist.resource.image).image : null,
                 backgroundImage: backgroundImage != null
                     ? Image.network(backgroundImage).image
@@ -339,7 +340,7 @@ class ArtistPageState extends State<ArtistPage> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: LIST_PADDING,
               )
             ]),
             onRefresh: _refresh,

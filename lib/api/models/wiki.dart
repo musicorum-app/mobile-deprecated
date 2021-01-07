@@ -1,5 +1,3 @@
-var WIKI_REGEX = RegExp(r'\s?<a href="(.*)">(.*)</a>.\s?', multiLine: true, dotAll: true);
-
 class Wiki {
   Wiki({this.content, this.published, this.summary, this.url});
 
@@ -7,6 +5,8 @@ class Wiki {
   final String summary;
   final String content;
   final String url;
+
+  static final WIKI_REGEX = RegExp(r'\s?<a href="(.*)">(.*)</a>\.?\s?', multiLine: true, dotAll: true);
 
   String get disclaimer {
     return 'User-contributed text is available under the Creative Commons By-SA License; additional terms may apply. This information is from Last.fm. Please reffer to their website for more information';

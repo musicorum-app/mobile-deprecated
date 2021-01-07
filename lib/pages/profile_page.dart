@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/models/user.dart';
 import 'package:musicorum/components/content_header.dart';
+import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/pages/profile.dart';
 import 'package:musicorum/states/login.dart';
 import 'package:musicorum/utils/common.dart';
@@ -58,7 +59,8 @@ class ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ),
-        backgroundColor: Colors.black.withAlpha((appBarVisibility * 200).toInt()),
+        backgroundColor:
+        APPBAR_COLOR.withAlpha((appBarVisibility * 255).toInt()),
       ),
       body: Consumer<LoginState>(
         builder: (context, loginState, child) {

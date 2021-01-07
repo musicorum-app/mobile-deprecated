@@ -13,7 +13,9 @@ import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/components/tags_fragment.dart';
 import 'package:musicorum/components/two_layered_appbar.dart';
 import 'package:musicorum/components/wiki_card.dart';
+import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
+import 'package:musicorum/pages/artist.dart';
 import 'package:musicorum/pages/extended_items_list.dart';
 import 'package:musicorum/states/login.dart';
 import 'package:musicorum/utils/common.dart';
@@ -145,7 +147,7 @@ class AlbumPageState extends State<AlbumPage> {
           ),
         ),
         backgroundColor:
-            Colors.black.withAlpha((appBarVisibility * 200).toInt()),
+        APPBAR_COLOR.withAlpha((appBarVisibility * 255).toInt()),
       ),
       body: MediaQuery.removePadding(
           context: context,
@@ -156,8 +158,19 @@ class AlbumPageState extends State<AlbumPage> {
                 squareImage: true,
                 loaded: true,
                 name: album.name,
+                secondary: album.artist,
+                loadingColor: predominantColor,
                 mainImage: album.images.getExtraLargeImage().image,
+                imageViewURL: album.images.getImageURLFromSize(1600, 0),
                 backgroundImage: backgroundImage,
+                onSecondaryTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ArtistPage(artist, widget.user),
+                    ),
+                  );
+                },
               ),
               SizedBox(
                 height: 16,
@@ -197,33 +210,18 @@ class AlbumPageState extends State<AlbumPage> {
                     ),
                     ContentItemList(
                       name: 'Tracks',
-                      items: trackListFetched && (album.tracks == null || album.tracks.length == 0)
+                      items: trackListFetched &&
+                              (album.tracks == null || album.tracks.length == 0)
                           ? [
                               Center(
                                 child: Text('Nothing found.'),
                               )
                             ]
                           : trackListFetched && album.tracks != null
-                              ? [
-                                  ...tracksList.take(5),
-                                  ViewMoreListItem(
-                                    onTap: () {
-                                      ExtendedItemsListPage.openItemsPage(
-                                          context,
-                                          'Tracks',
-                                          album.name,
-                                          tracksList);
-                                    },
-                                  )
-                                ]
-                              : [
-                                  ...List(5)
-                                      .map((_) => ListItemPlaceholder())
-                                      .toList(),
-                                  ViewMoreListItem(
-                                    placeHolder: true,
-                                  )
-                                ],
+                              ? [...tracksList]
+                              : List(5)
+                                  .map((_) => ListItemPlaceholder())
+                                  .toList(),
                     ),
                     // ContentItemList(
                     //   name: 'Top albums',
@@ -324,7 +322,7 @@ class AlbumPageState extends State<AlbumPage> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: LIST_PADDING,
               )
             ]),
             onRefresh: _refresh,

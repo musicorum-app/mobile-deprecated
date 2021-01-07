@@ -1,8 +1,11 @@
+import 'package:musicorum/api/models/Tag.dart';
 import 'package:musicorum/api/models/image.dart';
 import 'package:musicorum/api/models/track_resource.dart';
 import 'package:musicorum/api/models/types.dart';
+import 'package:musicorum/api/models/wiki.dart';
+import 'package:musicorum/api/musicorum.dart';
 
-enum TrackType { RECENT_TRACKS, TOP_TRACKS, ALBUM_TRACKS }
+enum TrackType { RECENT_TRACKS, TOP_TRACKS, ALBUM_TRACKS, TRACK_INFO }
 
 class Track {
   Track(this.type,
@@ -14,7 +17,14 @@ class Track {
       this.streamedAt,
       this.isPlaying = false,
       this.rank,
-      this.playCount});
+      this.playCount,
+      this.wiki,
+      this.tags,
+      this.globalPlayCount,
+      this.listeners,
+      this.resource,
+      this.duration,
+      this.userLoved});
 
   final TrackType type;
   final String name;
@@ -23,10 +33,24 @@ class Track {
   final LastfmImage images;
   final String url;
   final DateTime streamedAt;
+  final int duration;
   final int playCount;
+  final int globalPlayCount;
+  final int listeners;
   final bool isPlaying;
   final int rank;
   TrackResource resource;
+  final bool userLoved;
+  final List<Tag> tags;
+  final Wiki wiki;
+
+  Future<TrackResource> getResource() async {
+    if (resource != null) return resource;
+    this.resource = (await MusicorumApi.getTrackResources([
+      {'name': this.name, 'artist': this.artist}
+    ]))[0];
+    return resource;
+  }
 
   factory Track.fromRecentScrobblesJSON(Map<String, dynamic> json) {
     final List images = json['image'] as List;
@@ -62,7 +86,7 @@ class Track {
         images: LastfmImage.fromArray(
             images.map((el) => el['#text']).toList().cast<String>(),
             ImageType.TRACK),
-        playCount: int.parse(json['playcount']));
+        playCount: int.parse(json['playcount'].toString()));
   }
 
   factory Track.fromAlbumInfoTracksJSON(
@@ -73,5 +97,34 @@ class Track {
         url: json['url'],
         rank: int.parse(json['@attr']['rank']),
         images: images);
+  }
+
+  factory Track.fromTrackInfoJSON(Map<String, dynamic> json) {
+    final bool hasAlbum = json['album'] != null;
+    final List images = hasAlbum ? json['album']['image'] as List : null;
+    final List _tags = json['toptags']['tag'] as List;
+    final Wiki wiki = json['wiki'] != null
+        ? Wiki.fromJSONWithoutURL(json['wiki'], json['url'] + '/+wiki')
+        : null;
+
+    print(images);
+
+    return Track(TrackType.TRACK_INFO,
+        name: json['name'],
+        url: json['url'],
+        duration: int.parse(json['duration']),
+        listeners: int.parse(json['listeners']),
+        playCount: int.parse(json['userplaycount']),
+        globalPlayCount: int.parse(json['playcount']),
+        artist: json['artist']['name'],
+        album: hasAlbum ? json['album']['title'] : null,
+        images: hasAlbum
+            ? LastfmImage.fromArray(
+                images.map((el) => el['#text']).toList().cast<String>(),
+                ImageType.TRACK)
+            : null,
+        userLoved: json['userloved'] == '1',
+        tags: _tags.map((t) => Tag(t['name'], t['url'])).toList(),
+        wiki: wiki);
   }
 }

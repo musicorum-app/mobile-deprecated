@@ -6,6 +6,9 @@ import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:intl/intl.dart';
+import 'package:musicorum/pages/track_page.dart';
+import 'package:musicorum/states/login.dart';
+import 'package:provider/provider.dart';
 
 enum TrackListItemDisplayType { RECENT_SCROBBLE, PLAYCOUNT }
 
@@ -26,8 +29,9 @@ class TrackListItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              // builder: (context) => ProfilePage(user),
-              ),
+            builder: (context) =>
+                TrackPage(track, Provider.of<LoginState>(context).user),
+          ),
         );
       },
       child: Container(
@@ -41,18 +45,35 @@ class TrackListItem extends StatelessWidget {
                 BorderRadius.all(Radius.circular(CONTENT_LIST_BOX_BORDER))),
         child: Row(
           children: [
-            order != null ? Text(track.rank.toString(), style: TextStyle(
-              fontSize: 16
-            ),) : RoundedImage(
-              type == TrackListItemDisplayType.RECENT_SCROBBLE ? track.images.medium != null && track.images.medium != ''
-                  ? track.images.medium
-                  : track.images.defaultImageURL : track.resource != null && track.resource.image != null && track.resource.image != '' ? track.resource.image : track.images.defaultImageURL,
-              width: CONTENT_LIST_IMAGE_WIDTH + .0,
-              height: CONTENT_LIST_IMAGE_WIDTH + .0,
-              radius: CONTENT_LIST_IMAGE_BORDER_RADIUS,
-            ),
+            order != null
+                ? SizedBox(
+                    width: CONTENT_LIST_IMAGE_WIDTH + .0,
+                    height: CONTENT_LIST_IMAGE_WIDTH / 2,
+                    child: Center(
+                      child: Text(
+                        track.rank.toString(),
+                        style: TextStyle(
+                            fontSize: 16, color: SURFACE_SECONDARY_TEXT_COLOR),
+                      ),
+                    ),
+                  )
+                : RoundedImage(
+                    type == TrackListItemDisplayType.RECENT_SCROBBLE
+                        ? track.images.large != null &&
+                                track.images.large != ''
+                            ? track.images.large
+                            : track.images.defaultImageURL
+                        : track.resource != null &&
+                                track.resource.image != null &&
+                                track.resource.image != ''
+                            ? track.resource.image
+                            : track.images.defaultImageURL,
+                    width: CONTENT_LIST_IMAGE_WIDTH + .0,
+                    height: CONTENT_LIST_IMAGE_WIDTH + .0,
+                    radius: CONTENT_LIST_IMAGE_BORDER_RADIUS,
+                  ),
             SizedBox(
-              width: order != null ? 20 : 10,
+              width: order != null ? 5 : 10,
             ),
             Expanded(
               child: Column(
@@ -79,9 +100,13 @@ class TrackListItem extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: 3.0),
               child: Text(
-                type == TrackListItemDisplayType.RECENT_SCROBBLE ? track.isPlaying
-                    ? 'Scrobbling now'
-                    : Jiffy(track.streamedAt).fromNow() : track.playCount != null ? '${NumberFormat.compact().format(track.playCount)} plays' : '',
+                type == TrackListItemDisplayType.RECENT_SCROBBLE
+                    ? track.isPlaying
+                        ? 'Scrobbling now'
+                        : Jiffy(track.streamedAt).fromNow()
+                    : track.playCount != null
+                        ? '${NumberFormat.compact().format(track.playCount)} plays'
+                        : '',
                 style: TextStyle(
                     fontSize: 10, color: SURFACE_SECONDARY_TEXT_COLOR),
               ),

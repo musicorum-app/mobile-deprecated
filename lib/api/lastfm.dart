@@ -20,6 +20,8 @@ class LastfmAPI {
 
     String url = '$LASTFM_API_URL?$params';
 
+    print('DOING REQUEST TO $url');
+
     Response response = await get(url);
 
     return jsonDecode(utf8.decode(response.bodyBytes));
@@ -113,5 +115,36 @@ class LastfmAPI {
     });
 
     return Album.fromAlbumInfoJSON(body['album']);
+  }
+
+  static Future<User> getUserInfo(String user) async {
+    var body = await LastfmAPI.doGet('user.getInfo', {
+      'user': user
+    });
+
+    return User.fromJSON(body);
+  }
+
+  static Future<Track> getTrackInfo(String name, String artist, String user) async {
+    var body = await LastfmAPI.doGet('track.getInfo', {
+      'artist': artist,
+      'username': user,
+      'track': name
+    });
+
+    return Track.fromTrackInfoJSON(body['track']);
+  }
+
+  static Future<List<Track>> getTracksSimilar(String name, String artist) async {
+    var body = await LastfmAPI.doGet('track.getSimilar', {
+      'track': name,
+      'artist': artist,
+    });
+
+    print(body);
+
+    final List tracks = body['similartracks']['track'] as List;
+
+    return tracks.map((t) => Track.fromTopTracksJSON(t)).toList();
   }
 }

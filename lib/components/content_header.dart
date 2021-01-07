@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
+import 'package:musicorum/pages/image_viewer_page.dart';
 import 'package:musicorum/utils/common.dart';
 
 const CONTENT_HEADER_IMAGE_FACTOR = 1.3;
@@ -13,18 +14,27 @@ class ContentHeader extends StatelessWidget {
   final String name;
   final String secondary;
   final bool squareImage;
+  final Function onSecondaryTap;
+  final String imageViewURL;
+  final Color loadingColor;
 
-  const ContentHeader(
-      {@required this.loaded,
-      this.mainImage,
-      this.backgroundImage,
-      this.name,
-      this.squareImage = false,
-      this.secondary});
+  const ContentHeader({@required this.loaded,
+    this.mainImage,
+    this.backgroundImage,
+    this.name,
+    this.squareImage = false,
+    this.onSecondaryTap,
+    this.secondary,
+    this.imageViewURL,
+    this.loadingColor
+  });
 
-  static double getHeaderFractionFromOffset(
-      BuildContext context, double scrollOffset) {
-    var screenWidth = MediaQuery.of(context).size.width;
+  static double getHeaderFractionFromOffset(BuildContext context,
+      double scrollOffset) {
+    var screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     var appBarHeightLimit = screenWidth * CONTENT_HEADER_IMAGE_FACTOR;
     var appBarHeightMin = screenWidth * 0.9;
 
@@ -42,7 +52,10 @@ class ContentHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
+    var screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     var backgroundImageHeight = screenWidth * CONTENT_HEADER_IMAGE_FACTOR;
 
     return Container(
@@ -57,11 +70,14 @@ class ContentHeader extends StatelessWidget {
                       height: backgroundImageHeight,
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
-                        colors: [SURFACE_COLOR.withAlpha(90), SURFACE_COLOR],
-                        stops: [0.56, 1],
-                        begin: FractionalOffset.topCenter,
-                        end: AlignmentDirectional.bottomCenter,
-                      )),
+                            colors: [
+                              SURFACE_COLOR.withAlpha(90),
+                              SURFACE_COLOR
+                            ],
+                            stops: [0.56, 1],
+                            begin: FractionalOffset.topCenter,
+                            end: AlignmentDirectional.bottomCenter,
+                          )),
                     ),
                   ),
                 ],
@@ -69,14 +85,14 @@ class ContentHeader extends StatelessWidget {
               decoration: BoxDecoration(
                 image: loaded && backgroundImage != null
                     ? DecorationImage(
-                        image: Image(
-                          image: backgroundImage,
-                          height: backgroundImageHeight,
-                          width: screenWidth,
-                        ).image,
-                        alignment: Alignment.topCenter,
-                        fit: BoxFit.fitHeight,
-                      )
+                  image: Image(
+                    image: backgroundImage,
+                    height: backgroundImageHeight,
+                    width: screenWidth,
+                  ).image,
+                  alignment: Alignment.topCenter,
+                  fit: BoxFit.fitHeight,
+                )
                     : null,
               )),
           Column(
@@ -86,25 +102,48 @@ class ContentHeader extends StatelessWidget {
                 width: screenWidth,
                 height: screenWidth * .8,
               ),
-              Container(
-                child: this.squareImage
-                    ? RoundedImageProvider(
-                        mainImage,
-                        width:
-                            screenWidth * CONTENT_PAGE_IMAGE_SIZE_FRACTION * 2,
-                        height:
-                            screenWidth * CONTENT_PAGE_IMAGE_SIZE_FRACTION * 2,
-                        radius: 5,
-                      )
-                    : CircleAvatar(
-                        radius: screenWidth * CONTENT_PAGE_IMAGE_SIZE_FRACTION,
-                        backgroundImage: mainImage,
+              (mainImage != null
+                  ? InkWell(
+                  child: Container(
+                    child: this.squareImage
+                        ? RoundedImageProvider(
+                      mainImage,
+                      width: screenWidth *
+                          CONTENT_PAGE_IMAGE_SIZE_FRACTION *
+                          2,
+                      height: screenWidth *
+                          CONTENT_PAGE_IMAGE_SIZE_FRACTION *
+                          2,
+                      radius: 5,
+                    )
+                        : CircleAvatar(
+                      radius: screenWidth *
+                          CONTENT_PAGE_IMAGE_SIZE_FRACTION,
+                      backgroundImage: mainImage,
+                    ),
+                    decoration: BoxDecoration(
+                        shape: this.squareImage
+                            ? BoxShape.rectangle
+                            : BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 10,
+                              color: Color(0x70000000),
+                              spreadRadius: 2)
+                        ]),
+
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ImageViewerPage(Image.network(imageViewURL).image, imageViewURL, loadingColor, name),
                       ),
-                decoration: BoxDecoration(shape: this.squareImage ? BoxShape.rectangle : BoxShape.circle, boxShadow: [
-                  BoxShadow(
-                      blurRadius: 10, color: Color(0x70000000), spreadRadius: 2)
-                ]),
-              ),
+                    );
+                  },
+              )
+                  : Container()),
               SizedBox(
                 height: 10,
               ),
@@ -118,18 +157,26 @@ class ContentHeader extends StatelessWidget {
               ),
               (secondary != null
                   ? Column(
-                      children: [
-                        SizedBox(
-                          height: 1,
-                        ),
-                        Text(
-                          secondary,
-                          style: TextStyle(
-                              color: SURFACE_SECONDARY_TEXT_COLOR,
-                              fontSize: 16),
-                        )
-                      ],
-                    )
+                children: [
+                  SizedBox(
+                    height: 1,
+                  ),
+                  InkWell(
+                    borderRadius:
+                    new BorderRadius.all(Radius.circular(4.0)),
+                    onTap: onSecondaryTap,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(
+                        secondary,
+                        style: TextStyle(
+                            color: SURFACE_SECONDARY_TEXT_COLOR,
+                            fontSize: 16),
+                      ),
+                    ),
+                  )
+                ],
+              )
                   : Column())
             ],
           )

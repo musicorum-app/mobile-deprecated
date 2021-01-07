@@ -36,9 +36,10 @@ class LastfmImage {
     return medium == '';
   }
 
-  String getImageURLFromSize(int size) {
+  String getImageURLFromSize(int width, [int height]) {
+    if (height == null) height = width;
     if (this.isNull) return this.defaultImageURL;
-    return this.extraLarge.replaceAll('/300x300/', '/${size}x$size/');
+    return this.extraLarge.replaceAll('/300x300/', '/${width}x$height/');
   }
 
   Image getImageFromSize(int size) {
