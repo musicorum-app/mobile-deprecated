@@ -47,8 +47,8 @@ class ImageViewerPage extends StatelessWidget {
         ],
       ),
       body: PhotoView(
-        minScale: PhotoViewComputedScale.contained * 0.2,
-        maxScale: PhotoViewComputedScale.contained * 2,
+        minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.covered * 3,
         enableRotation: false,
         loadingBuilder: (context, event) => Center(
           child: Padding(

@@ -11,8 +11,10 @@ class ChartsPage extends StatefulWidget {
 class ChartsPageState extends State<ChartsPage> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [PageTitle('Charts')],
+    return Scaffold(
+      body: ListView(
+        children: [PageTitle('Charts')],
+      ),
     );
   }
 }

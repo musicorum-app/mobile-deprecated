@@ -13,11 +13,13 @@ class AccountPage extends StatefulWidget {
 class AccountPageState extends State<AccountPage> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
-    return Consumer<LoginState>(
-      builder: (context, loginState, child) {
-        print(loginState.user);
-        return loginState.isUserLoaded ? Profile(loginState.user, loggedInUser: loginState.user,) : Center(child: CircularProgressIndicator());
-      },
+    return Scaffold(
+      body: Consumer<LoginState>(
+        builder: (context, loginState, child) {
+          print(loginState.user);
+          return loginState.isUserLoaded ? Profile(loginState.user, loggedInUser: loginState.user,) : Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 

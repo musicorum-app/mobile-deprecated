@@ -8,6 +8,7 @@ import 'package:musicorum/pages/home.dart';
 import 'package:musicorum/pages/scrobbling.dart';
 import 'package:musicorum/states/login.dart';
 import 'package:provider/provider.dart';
+import 'package:custom_navigator/custom_navigation.dart';
 
 class LoggedInRouter extends StatefulWidget {
   @override
@@ -36,32 +37,83 @@ class LoggedInRouterState extends State<LoggedInRouter> {
     super.initState();
   }
 
+  final navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+  ];
+
+  Widget _buildPageOffstage(GlobalKey<NavigatorState> key, int index) {
+    return Offstage(
+      offstage: _page != index,
+      child: CustomNavigator(
+        navigatorKey: key,
+        home: pages[index],
+        pageRoute: PageRoutes.materialPageRoute,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        children: pages,
-        controller: pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _page = index;
-          });
-        },
+    return WillPopScope(
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            _buildPageOffstage(navigatorKeys[0], 0),
+            _buildPageOffstage(navigatorKeys[1], 1),
+            _buildPageOffstage(navigatorKeys[2], 2),
+            _buildPageOffstage(navigatorKeys[3], 3),
+            _buildPageOffstage(navigatorKeys[4], 4),
+          ],
+        ),
+        bottomNavigationBar: Stack(
+          children: [
+            Container(
+              child: BottomNavigationBar(
+                  backgroundColor: SURFACE_SECONDARY_COLOR,
+                  type: BottomNavigationBarType.fixed,
+                  currentIndex: _page,
+                  showUnselectedLabels: false,
+                  showSelectedLabels: true,
+                  onTap: (int index) {
+                    setState(() {
+                      _page = index;
+                    });
+                  },
+                  items: destinations
+                      .map((Destination dest) => BottomNavigationBarItem(
+                          icon: Icon(dest.icon), label: dest.title))
+                      .toList()),
+              // margin: EdgeInsets.only(top: kBottomNavigationBarHeight),
+            ),
+            // Container(
+            //   width: double.infinity,
+            //   height: kBottomNavigationBarHeight,
+            //   color: Colors.blue,
+            // ),
+          ],
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: SURFACE_SECONDARY_COLOR,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _page,
-        showUnselectedLabels: false,
-        showSelectedLabels: true,
-        onTap: (int index) {
-          pageController.jumpToPage(index);
-        },
-        items: destinations
-          .map((Destination dest) => BottomNavigationBarItem(icon: Icon(dest.icon), label: dest.title))
-          .toList()
-      ),
+      onWillPop: () async {
+        final isFirstRouteInCurrentTab =
+            !await navigatorKeys[_page].currentState.maybePop();
+        if (isFirstRouteInCurrentTab) {
+          // if not on the 'main' tab
+          if (_page != 0) {
+            // select 'main' tab
+            setState(() {
+              _page = 0;
+            });
+            // back button handled by app
+            return false;
+          }
+        }
+        // let system handle back button if we're on the first route
+        return isFirstRouteInCurrentTab;
+      },
     );
   }
 }

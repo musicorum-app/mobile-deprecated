@@ -11,8 +11,10 @@ class DiscoverPage extends StatefulWidget {
 class DiscoverPageState extends State<DiscoverPage> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [PageTitle('Discover')],
+    return Scaffold(
+      body:  ListView(
+        children: [PageTitle('Discover')],
+      ),
     );
   }
 }
