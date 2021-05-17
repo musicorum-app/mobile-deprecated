@@ -10,7 +10,7 @@ class MusicorumApi {
   static Future<User> getAccountFromToken(String token) async {
     final String url = '$MUSICORUM_API_URL/auth/me';
     final Map<String, String> headers = {"Authorization": token};
-    Response response = await get(url, headers: headers);
+    Response response = await get(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 200) {
       return User.fromJSON(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -25,7 +25,7 @@ class MusicorumApi {
       List<String> artists) async {
     final String url = '$MUSICORUM_RESOURCE_URL/find/artists';
 
-    Response response = await post(url,
+    Response response = await post(Uri.parse(url),
         body: jsonEncode(<String, dynamic>{'artists': artists}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -48,7 +48,7 @@ class MusicorumApi {
       List<Map<String, String>> albums) async {
     final String url = '$MUSICORUM_RESOURCE_URL/find/tracks';
 
-    Response response = await post(url,
+    Response response = await post(Uri.parse(url),
         body: jsonEncode(<String, dynamic>{'tracks': albums}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',

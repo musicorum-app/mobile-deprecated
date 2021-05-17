@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.musicorumapp.mobile.musicorum"
-    android:versionCode="15"
-    android:versionName="2.13"
+    android:versionCode="16"
+    android:versionName="2.14"
     >
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.

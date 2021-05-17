@@ -74,17 +74,24 @@ class LoggedInRouterState extends State<LoggedInRouter> {
             Container(
               child: BottomNavigationBar(
                   backgroundColor: SURFACE_SECONDARY_COLOR,
+                  selectedItemColor: Colors.white,
                   type: BottomNavigationBarType.fixed,
                   currentIndex: _page,
                   showUnselectedLabels: false,
                   showSelectedLabels: true,
                   onTap: (int index) {
+                    if (index == _page) {
+                      navigatorKeys[index].currentState.popUntil((
+                          route) => route.isFirst);
+                      return;
+                    }
                     setState(() {
                       _page = index;
                     });
                   },
                   items: destinations
-                      .map((Destination dest) => BottomNavigationBarItem(
+                      .map((Destination dest) =>
+                      BottomNavigationBarItem(
                           icon: Icon(dest.icon), label: dest.title))
                       .toList()),
               // margin: EdgeInsets.only(top: kBottomNavigationBarHeight),
@@ -99,7 +106,7 @@ class LoggedInRouterState extends State<LoggedInRouter> {
       ),
       onWillPop: () async {
         final isFirstRouteInCurrentTab =
-            !await navigatorKeys[_page].currentState.maybePop();
+        !await navigatorKeys[_page].currentState.maybePop();
         if (isFirstRouteInCurrentTab) {
           // if not on the 'main' tab
           if (_page != 0) {

@@ -98,7 +98,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
       setState(() {
         user = _user;
       });
-      Provider.of<LoginState>(context).setUser(_user);
+      Provider.of<AuthState>(context).setUser(_user);
     });
     await _doRequests();
   }
@@ -106,7 +106,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     Color gradientColor = handleColor(paletteGenerator);
-    return Consumer<LoginState>(builder: (context, loginState, child) {
+    return Consumer<AuthState>(builder: (context, loginState, child) {
       if (user == null && loginState.isUserLoaded) {
         Future.delayed(Duration.zero, () async {
           _setUser(loginState.user);

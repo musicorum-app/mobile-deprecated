@@ -22,7 +22,7 @@ class LastfmAPI {
 
     print('DOING REQUEST TO $url');
 
-    Response response = await get(url);
+    Response response = await get(Uri.parse(url));
 
     return jsonDecode(utf8.decode(response.bodyBytes));
   }

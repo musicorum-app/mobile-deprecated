@@ -14,7 +14,7 @@ class AccountPageState extends State<AccountPage> with AutomaticKeepAliveClientM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<LoginState>(
+      body: Consumer<AuthState>(
         builder: (context, loginState, child) {
           print(loginState.user);
           return loginState.isUserLoaded ? Profile(loginState.user, loggedInUser: loginState.user,) : Center(child: CircularProgressIndicator());

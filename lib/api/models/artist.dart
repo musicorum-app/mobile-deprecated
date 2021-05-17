@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:musicorum/api/models/Tag.dart';
+import 'package:musicorum/api/models/tag.dart';
 import 'package:musicorum/api/models/artist_resource.dart';
 import 'package:musicorum/api/models/image.dart';
 import 'package:musicorum/api/models/wiki.dart';

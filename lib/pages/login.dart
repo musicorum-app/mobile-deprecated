@@ -29,7 +29,7 @@ class LoginPageState extends State<LoginPage> {
     await storage.write(key: STORAGE_TOKEN_KEY, value: token);
 
     print('SETTING LOGIN');
-    final loginState = Provider.of<LoginState>(context, listen: false);
+    final loginState = Provider.of<AuthState>(context, listen: false);
 
     User usr = await MusicorumApi.getAccountFromToken(token);
 

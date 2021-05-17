@@ -1,4 +1,4 @@
-import 'package:musicorum/api/models/Tag.dart';
+import 'package:musicorum/api/models/tag.dart';
 import 'package:musicorum/api/models/image.dart';
 import 'package:musicorum/api/models/track.dart';
 import 'package:musicorum/api/models/types.dart';

@@ -3,7 +3,7 @@ import 'package:musicorum/api/models/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:musicorum/constants/storage_keys.dart';
 
-class LoginState extends ChangeNotifier {
+class AuthState extends ChangeNotifier {
   String token;
   User user;
 

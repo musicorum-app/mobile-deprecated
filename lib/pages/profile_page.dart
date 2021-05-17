@@ -62,7 +62,7 @@ class ProfilePageState extends State<ProfilePage> {
         backgroundColor:
         APPBAR_COLOR.withAlpha((appBarVisibility * 255).toInt()),
       ),
-      body: Consumer<LoginState>(
+      body: Consumer<AuthState>(
         builder: (context, loginState, child) {
           print(loginState.user);
           return Profile(widget.user, controller: controller, loggedInUser: loginState.user,);

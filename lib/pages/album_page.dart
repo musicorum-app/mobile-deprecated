@@ -164,6 +164,7 @@ class AlbumPageState extends State<AlbumPage> {
                 imageViewURL: album.images.getImageURLFromSize(1600, 0),
                 backgroundImage: backgroundImage,
                 onSecondaryTap: () {
+                  if (artist == null) return;
                   Navigator.push(
                     context,
                     MaterialPageRoute(

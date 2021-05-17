@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LoginState(),
+      create: (context) => AuthState(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
           ),
           brightness: Brightness.dark,
           fontFamily: 'Poppins',
-          primaryColor: MUSICORUM_LIGHT,
-          accentColor: MUSICORUM_LIGHT,
+          primaryColor: MUSICORUM_COLOR,
+          accentColor: MUSICORUM_COLOR,
           scaffoldBackgroundColor: SURFACE_COLOR,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
@@ -65,12 +65,10 @@ class _AccountHandlerState extends State<AccountHandler> {
   }
 
   void handleLogin(BuildContext context) async {
-    print('aaaa');
     final storage = new FlutterSecureStorage();
     loggedIn = await storage.containsKey(key: STORAGE_TOKEN_KEY);
-    print('LOGGING IN');
     final token = await storage.read(key: STORAGE_TOKEN_KEY);
-    final loginState = Provider.of<LoginState>(context, listen: false);
+    final loginState = Provider.of<AuthState>(context, listen: false);
 
     if (loggedIn) {
       loginState.login(token);
@@ -83,10 +81,8 @@ class _AccountHandlerState extends State<AccountHandler> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LoginState>(
+    return Consumer<AuthState>(
       builder: (context, loginState, child) {
-        print("tk: ");
-        print(loginState.isLoggedIn);
         return loginState.isLoggedIn ? LoggedInRouter() : LoginPage();
       },
     );

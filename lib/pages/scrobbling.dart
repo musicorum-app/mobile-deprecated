@@ -42,6 +42,9 @@ class ScrobblingPageState extends State<ScrobblingPage> {
   _fetchScrobbles() async {
     print('fetching scrobbles...');
     var tracks = await LastfmAPI.getRecentTracks(user.username);
+
+    var authState = Provider.of<AuthState>(context, listen: false);
+
     setState(() {
       _scrobbles = tracks;
     });
@@ -169,11 +172,11 @@ class ScrobblingPageState extends State<ScrobblingPage> {
   @override
   Widget build(BuildContext context) {
     if (!started) {
-      if (Provider.of<LoginState>(context) != null && Provider.of<LoginState>(context).user != null) {
+      if (Provider.of<AuthState>(context) != null && Provider.of<AuthState>(context).user != null) {
         setState(() {
           started = true;
         });
-        _doRequests(Provider.of<LoginState>(context).user);
+        _doRequests(Provider.of<AuthState>(context).user);
       }
     }
     return RefreshIndicator(

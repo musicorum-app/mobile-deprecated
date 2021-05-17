@@ -30,7 +30,7 @@ class TrackListItem extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                TrackPage(track, Provider.of<LoginState>(context).user),
+                TrackPage(track, Provider.of<AuthState>(context).user),
           ),
         );
       },
