@@ -6,6 +6,7 @@ import 'package:musicorum/components/content_stat.dart';
 import 'package:musicorum/components/tags_fragment.dart';
 import 'package:musicorum/components/wiki_card.dart';
 import 'package:musicorum/constants/colors.dart';
+import 'package:musicorum/constants/common.dart';
 import 'package:musicorum/utils/common.dart';
 
 class TagPage extends StatefulWidget {
@@ -146,11 +147,18 @@ class TagPageState extends State<TagPage> {
                   ],
                 ),
                 SizedBox(height: 10,),
-                WikiCard(
-                  tag.wiki,
-                  title: 'About',
-                  subTitle: tag.name,
-                  predominantColor: predominantColor,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: LIST_PADDING),
+                  child: Column(
+                    children: [
+                      WikiCard(
+                        tag.wiki,
+                        title: 'About',
+                        subTitle: tag.name,
+                        predominantColor: predominantColor,
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
