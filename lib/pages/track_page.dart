@@ -6,6 +6,7 @@ import 'package:musicorum/api/models/track.dart';
 import 'package:musicorum/api/models/track_resource.dart';
 import 'package:musicorum/api/models/user.dart';
 import 'package:musicorum/api/musicorum.dart';
+import 'package:musicorum/components/animated_appbar.dart';
 import 'package:musicorum/components/content_header.dart';
 import 'package:musicorum/components/content_item_list.dart';
 import 'package:musicorum/components/content_stat.dart';
@@ -44,7 +45,7 @@ class TrackPageState extends State<TrackPage> {
   Color predominantColor;
 
   ScrollController controller = ScrollController();
-  double scrollOffset = 0.0;
+  final _scrollOffsetNotifier = ValueNotifier<double>(0.0);
 
   Track get track {
     return fullTrack != null ? fullTrack : widget.track;
@@ -74,9 +75,7 @@ class TrackPageState extends State<TrackPage> {
     if (controller != null) {
       controller.addListener(() {
         if (!controller.hasClients) return;
-        setState(() {
-          scrollOffset = controller.offset;
-        });
+        _scrollOffsetNotifier.value = controller.offset;
       });
     }
 
@@ -142,9 +141,6 @@ class TrackPageState extends State<TrackPage> {
 
   @override
   Widget build(BuildContext context) {
-    var appBarVisibility =
-        ContentHeader.getHeaderFractionFromOffset(context, scrollOffset);
-
     var similarTracks = _getItemsList(similar)
         .map((t) =>
             TrackListItem(track: t, type: TrackListItemDisplayType.PLAYCOUNT))
@@ -152,36 +148,11 @@ class TrackPageState extends State<TrackPage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Opacity(
-          opacity: appBarVisibility,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              mainImage != null
-                  ? RoundedImageProvider(
-                      mainImage,
-                      radius: 4,
-                      width: 32,
-                      height: 32,
-                    )
-                  : Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.0),
-                          color: PLACEHOLDER_COLOR),
-                    ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Expanded(child: TwoLayeredAppBar(track.name, track.artist))
-            ],
-          ),
-        ),
-        backgroundColor:
-            APPBAR_COLOR.withAlpha((appBarVisibility * 255).toInt()),
+      appBar: AnimatedAppBar(
+        name: track.name,
+        secondary: track.artist,
+        image: mainImage,
+        notifier: _scrollOffsetNotifier,
       ),
       body: MediaQuery.removePadding(
           context: context,

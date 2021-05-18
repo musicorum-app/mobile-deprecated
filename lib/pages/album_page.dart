@@ -3,6 +3,7 @@ import 'package:musicorum/api/lastfm.dart';
 import 'package:musicorum/api/models/album.dart';
 import 'package:musicorum/api/models/artist.dart';
 import 'package:musicorum/api/models/user.dart';
+import 'package:musicorum/components/animated_appbar.dart';
 import 'package:musicorum/components/content_header.dart';
 import 'package:musicorum/components/content_item_list.dart';
 import 'package:musicorum/components/content_stat.dart';
@@ -39,7 +40,7 @@ class AlbumPageState extends State<AlbumPage> {
   Color predominantColor;
 
   ScrollController controller = ScrollController();
-  double scrollOffset = 0.0;
+  final _scrollOffsetNotifier = ValueNotifier<double>(0.0);
 
   bool trackListFetched = false;
 
@@ -62,9 +63,7 @@ class AlbumPageState extends State<AlbumPage> {
     if (controller != null) {
       controller.addListener(() {
         if (!controller.hasClients) return;
-        setState(() {
-          scrollOffset = controller.offset;
-        });
+          _scrollOffsetNotifier.value = controller.offset;
       });
     }
 
@@ -113,10 +112,7 @@ class AlbumPageState extends State<AlbumPage> {
 
   @override
   Widget build(BuildContext context) {
-    var appBarVisibility =
-        ContentHeader.getHeaderFractionFromOffset(context, scrollOffset);
-
-    var tracksList = _getItemsList(album.tracks != null ? album.tracks : [])
+   var tracksList = _getItemsList(album.tracks != null ? album.tracks : [])
         .map((t) => TrackListItem(
               track: t,
               type: TrackListItemDisplayType.PLAYCOUNT,
@@ -126,28 +122,11 @@ class AlbumPageState extends State<AlbumPage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Opacity(
-          opacity: appBarVisibility,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              RoundedImageProvider(
-                album.images.getMediumImage().image,
-                radius: 4,
-                width: 32,
-                height: 32,
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Expanded(child: TwoLayeredAppBar(album.name, album.artist))
-            ],
-          ),
-        ),
-        backgroundColor:
-        APPBAR_COLOR.withAlpha((appBarVisibility * 255).toInt()),
+      appBar: AnimatedAppBar(
+        name: album.name,
+        secondary: album.artist,
+        image: album.images.getMediumImage().image,
+        notifier: _scrollOffsetNotifier,
       ),
       body: MediaQuery.removePadding(
           context: context,

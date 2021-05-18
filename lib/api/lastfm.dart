@@ -36,10 +36,8 @@ class LastfmAPI {
   }
 
   static Future<List<Track>> getTopTracks(String user, Period period) async {
-    var body = await LastfmAPI.doGet('user.getTopTracks', {
-      'user': user,
-      'period': period.name
-    });
+    var body = await LastfmAPI.doGet(
+        'user.getTopTracks', {'user': user, 'period': period.name});
 
     final List tracks = body['toptracks']['track'] as List;
 
@@ -47,10 +45,8 @@ class LastfmAPI {
   }
 
   static Future<List<Album>> getTopAlbums(String user, Period period) async {
-    var body = await LastfmAPI.doGet('user.getTopAlbums', {
-      'user': user,
-      'period': period.name
-    });
+    var body = await LastfmAPI.doGet(
+        'user.getTopAlbums', {'user': user, 'period': period.name});
 
     final List albums = body['topalbums']['album'] as List;
 
@@ -58,10 +54,8 @@ class LastfmAPI {
   }
 
   static Future<List<Artist>> getTopArtists(String user, Period period) async {
-    var body = await LastfmAPI.doGet('user.getTopArtists', {
-      'user': user,
-      'period': period.name
-    });
+    var body = await LastfmAPI.doGet(
+        'user.getTopArtists', {'user': user, 'period': period.name});
 
     final List albums = body['topartists']['artist'] as List;
 
@@ -69,9 +63,7 @@ class LastfmAPI {
   }
 
   static Future<List<User>> getFriends(String user) async {
-    var body = await LastfmAPI.doGet('user.getFriends', {
-      'user': user
-    });
+    var body = await LastfmAPI.doGet('user.getFriends', {'user': user});
 
     final List friends = body['friends']['user'] as List;
 
@@ -79,9 +71,7 @@ class LastfmAPI {
   }
 
   static Future<List<Album>> getArtistTopAlbums(String artist) async {
-    var body = await LastfmAPI.doGet('artist.getTopAlbums', {
-      'artist': artist
-    });
+    var body = await LastfmAPI.doGet('artist.getTopAlbums', {'artist': artist});
 
     final List friends = body['topalbums']['album'] as List;
 
@@ -89,10 +79,8 @@ class LastfmAPI {
   }
 
   static Future<Artist> getArtistInfo(String artist, String user) async {
-    var body = await LastfmAPI.doGet('artist.getInfo', {
-      'artist': artist,
-      'username': user
-    });
+    var body = await LastfmAPI.doGet(
+        'artist.getInfo', {'artist': artist, 'username': user});
 
     return Artist.fromArtistInfoJSON(body['artist']);
   }
@@ -107,44 +95,65 @@ class LastfmAPI {
     return tracks.map((t) => Track.fromTopTracksJSON(t)).toList();
   }
 
-  static Future<Album> getAlbumInfo(String album, String artist, String user) async {
-    var body = await LastfmAPI.doGet('album.getInfo', {
-      'artist': artist,
-      'username': user,
-      'album': album
-    });
+  static Future<Album> getAlbumInfo(
+      String album, String artist, String user) async {
+    var body = await LastfmAPI.doGet(
+        'album.getInfo', {'artist': artist, 'username': user, 'album': album});
 
     return Album.fromAlbumInfoJSON(body['album']);
   }
 
   static Future<User> getUserInfo(String user) async {
-    var body = await LastfmAPI.doGet('user.getInfo', {
-      'user': user
-    });
+    var body = await LastfmAPI.doGet('user.getInfo', {'user': user});
 
     return User.fromJSON(body);
   }
 
-  static Future<Track> getTrackInfo(String name, String artist, String user) async {
-    var body = await LastfmAPI.doGet('track.getInfo', {
-      'artist': artist,
-      'username': user,
-      'track': name
-    });
+  static Future<Track> getTrackInfo(
+      String name, String artist, String user) async {
+    var body = await LastfmAPI.doGet(
+        'track.getInfo', {'artist': artist, 'username': user, 'track': name});
 
     return Track.fromTrackInfoJSON(body['track']);
   }
 
-  static Future<List<Track>> getTracksSimilar(String name, String artist) async {
+  static Future<List<Track>> getTracksSimilar(
+      String name, String artist) async {
     var body = await LastfmAPI.doGet('track.getSimilar', {
       'track': name,
       'artist': artist,
     });
 
-    print(body);
-
     final List tracks = body['similartracks']['track'] as List;
-
     return tracks.map((t) => Track.fromTopTracksJSON(t)).toList();
+  }
+
+  static Future<List<Artist>> getTagTopArtists(
+      String tag, int limit, int page) async {
+    var body = await LastfmAPI.doGet('tag.getTopArtists',
+        {'tag': tag, 'limit': limit.toString(), 'page': page.toString()});
+
+    final List artists = body['topartists']['artist'] as List;
+    return artists.map((a) => Artist.fromSimpleJSON(a)).toList();
+  }
+
+  static Future<Map<String, dynamic>> getTagInfo(String tag) async {
+    var body = await LastfmAPI.doGet('tag.getInfo', {
+      'tag': tag,
+    });
+    return body['tag'];
+  }
+
+  static Future<List<Artist>> searchArtists(String query,
+      {int limit = 30, int page = 1}) async {
+    var body = await LastfmAPI.doGet('artist.search',
+        {'artist': query, 'limit': limit.toString(), 'page': page.toString()});
+
+    final List artists = body['results']['artistmatches']['artist'] as List;
+    return artists.map((a) => Artist(
+      name: a['name'],
+      url: a['url'],
+      listeners: int.parse(a['listeners'])
+    )).toList();
   }
 }

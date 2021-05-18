@@ -48,6 +48,13 @@ class Artist {
         playCount: int.parse(json['playcount']));
   }
 
+  factory Artist.fromSimpleJSON(Map<String, dynamic> json) {
+    return Artist(
+      name: json['name'],
+      url: json['url']
+    );
+  }
+
   factory Artist.fromArtistInfoJSON(Map<String, dynamic> json) {
     final List _tags = json['tags']['tag'] as List;
     final List _similar = json['similar']['artist'] as List;
@@ -55,9 +62,9 @@ class Artist {
     return Artist(
       name: json['name'],
       url: json['url'],
-      playCount: int.parse(json['stats']['userplaycount']),
-      globalPlayCount: int.parse(json['stats']['playcount']),
-      listeners: int.parse(json['stats']['listeners']),
+      playCount: json['stats']['userplaycount'],
+      globalPlayCount: json['stats']['playcount'],
+      listeners: json['stats']['listeners'],
       tags: _tags.map((t) => Tag(t['name'], t['url'])).toList(),
       similar:
           _similar.map((a) => Artist(name: a['name'], url: a['url'])).toList(),

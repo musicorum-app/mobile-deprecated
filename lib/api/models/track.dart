@@ -95,7 +95,7 @@ class Track {
         name: json['name'],
         artist: json['artist']['name'],
         url: json['url'],
-        rank: int.parse(json['@attr']['rank']),
+        rank: json['@attr']['rank'],
         images: images);
   }
 

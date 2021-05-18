@@ -72,7 +72,7 @@ class Album {
       artist: json['artist'],
       url: json['url'],
       images: lfmImages,
-      playCount: int.parse(json['userplaycount']),
+      playCount: json['userplaycount'],
       globalPlayCount: int.parse(json['playcount']),
       listeners: int.parse(json['listeners']),
       wiki: json['wiki'] != null ? Wiki.fromJSONWithoutURL(json['wiki'], json['url'] + '/+wiki') : null,

@@ -11,11 +11,26 @@ class WikiCard extends StatelessWidget {
   final Wiki wiki;
   final Color predominantColor;
 
+  bool get isWikiNull {
+    return wiki.summary == null || wiki.summaryFiltered == '';
+  }
+
+  String get wikiText {
+    if (!isWikiNull) {
+      return wiki.summaryFiltered + (wiki.summaryFiltered == wiki.contentFiltered ? '' : '...');
+    } else {
+      return 'No wiki found.';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ColoredCard(
       onTap: () {
-        Navigator.push(
+        if (isWikiNull) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('There\'s no wiki about this.'),
+        ));
+        else Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => WikiPage(wiki, predominantColor, title, subTitle)));
@@ -36,7 +51,7 @@ class WikiCard extends StatelessWidget {
             SizedBox(
               height: 6.0,
             ),
-            Text(wiki != null ? wiki.summaryFiltered : 'Loading...'),
+            Text(wiki != null ? wikiText : 'Loading...'),
             SizedBox(
               height: 6.0,
             ),

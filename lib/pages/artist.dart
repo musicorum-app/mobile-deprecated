@@ -7,6 +7,7 @@ import 'package:musicorum/api/models/artist_resource.dart';
 import 'package:musicorum/api/models/track.dart';
 import 'package:musicorum/api/models/track_resource.dart';
 import 'package:musicorum/api/models/user.dart';
+import 'package:musicorum/components/animated_appbar.dart';
 import 'package:musicorum/components/colored_card.dart';
 import 'package:musicorum/components/content_header.dart';
 import 'package:musicorum/components/content_item_list.dart';
@@ -44,7 +45,7 @@ class ArtistPageState extends State<ArtistPage> {
   bool topTracksFetched = false;
 
   ScrollController controller = ScrollController();
-  double scrollOffset = 0.0;
+  final _scrollOffsetNotifier = ValueNotifier<double>(0.0);
 
   Artist get artist {
     return fullArtist != null ? fullArtist : widget._artist;
@@ -60,9 +61,7 @@ class ArtistPageState extends State<ArtistPage> {
     if (controller != null) {
       controller.addListener(() {
         if (!controller.hasClients) return;
-        setState(() {
-          scrollOffset = controller.offset;
-        });
+        _scrollOffsetNotifier.value = controller.offset;
       });
     }
 
@@ -132,9 +131,6 @@ class ArtistPageState extends State<ArtistPage> {
 
   @override
   Widget build(BuildContext context) {
-    var appBarVisibility =
-        ContentHeader.getHeaderFractionFromOffset(context, scrollOffset);
-
     var topTracksItems = _getItemsList(topTracks)
         .map((t) =>
             TrackListItem(track: t, type: TrackListItemDisplayType.PLAYCOUNT))
@@ -145,28 +141,11 @@ class ArtistPageState extends State<ArtistPage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Opacity(
-          opacity: appBarVisibility,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                backgroundImage: Image.network(artist.imageURL).image,
-                radius: 16,
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Text(
-                artist.name,
-              )
-            ],
-          ),
-        ),
-        backgroundColor:
-        APPBAR_COLOR.withAlpha((appBarVisibility * 255).toInt()),
+      appBar: AnimatedAppBar(
+        image: Image.network(artist.imageURL).image,
+        radius: 16,
+        name: artist.name,
+        notifier: _scrollOffsetNotifier,
       ),
       body: MediaQuery.removePadding(
           context: context,

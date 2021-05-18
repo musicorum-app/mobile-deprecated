@@ -45,14 +45,14 @@ class ArtistListItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 )),
-            Container(
+            user != null ? Container(
               margin: EdgeInsets.only(left: 3.0),
               child: Text(
                 artist.playCount.toString() + ' plays',
                 style: TextStyle(
                     fontSize: 10, color: SURFACE_SECONDARY_TEXT_COLOR),
               ),
-            )
+            ) : Container()
           ],
         ),
       ),

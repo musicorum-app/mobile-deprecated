@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/models/user.dart';
+import 'package:musicorum/components/animated_appbar.dart';
 import 'package:musicorum/components/content_header.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/pages/profile.dart';
@@ -17,18 +18,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  double scrollOffset = 0.0;
-
   ScrollController controller = ScrollController();
+  final _scrollOffsetNotifier = ValueNotifier<double>(0.0);
 
   @override
   void initState() {
     if (controller != null) {
       controller.addListener(() {
         if (!controller.hasClients) return;
-        setState(() {
-          scrollOffset = controller.offset;
-        });
+        _scrollOffsetNotifier.value = controller.offset;
       });
     }
 
@@ -38,29 +36,18 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void dispose() {
     controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var appBarVisibility = ContentHeader.getHeaderFractionFromOffset(context, scrollOffset);
-    
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Opacity(
-          opacity: appBarVisibility,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(backgroundImage: widget.user.images.getMediumImage().image, radius: 16,),
-              SizedBox(width: 10.0,),
-              Text(widget.user.displayName,)
-            ],
-          ),
-        ),
-        backgroundColor:
-        APPBAR_COLOR.withAlpha((appBarVisibility * 255).toInt()),
+      appBar: AnimatedAppBar(
+        name: widget.user.displayName,
+        image:  widget.user.images.getMediumImage().image,
+        notifier: _scrollOffsetNotifier,
+        radius: 16,
       ),
       body: Consumer<AuthState>(
         builder: (context, loginState, child) {
