@@ -10,13 +10,26 @@ class AnimatedAppBar extends StatelessWidget implements PreferredSizeWidget {
       @required this.name,
       this.secondary,
       @required this.image,
+      this.appBar,
+      this.actions,
       this.radius = 4});
 
+  final AppBar appBar;
   final ValueNotifier<double> notifier;
   final String name;
   final String secondary;
   final ImageProvider image;
   final double radius;
+  final List<Widget> actions;
+
+  AppBar get appBarItem {
+    if (appBar == null)
+      return AppBar(
+        elevation: 0.0,
+      );
+    else
+      return appBar;
+  }
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -51,6 +64,7 @@ class AnimatedAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
+            actions: actions,
           );
         });
   }

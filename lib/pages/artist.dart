@@ -1,3 +1,5 @@
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:android_intent/android_intent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/lastfm.dart';
@@ -8,7 +10,7 @@ import 'package:musicorum/api/models/track.dart';
 import 'package:musicorum/api/models/track_resource.dart';
 import 'package:musicorum/api/models/user.dart';
 import 'package:musicorum/components/animated_appbar.dart';
-import 'package:musicorum/components/colored_card.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:musicorum/components/content_header.dart';
 import 'package:musicorum/components/content_item_list.dart';
 import 'package:musicorum/components/content_stat.dart';
@@ -17,10 +19,12 @@ import 'package:musicorum/components/items/placeholder.dart';
 import 'package:musicorum/components/items/track_list_item.dart';
 import 'package:musicorum/components/items/view_more_list_item.dart';
 import 'package:musicorum/components/list_content.dart';
+import 'package:musicorum/components/more_bottom_sheet.dart';
 import 'package:musicorum/components/tags_fragment.dart';
 import 'package:musicorum/components/wiki_card.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
+import 'package:musicorum/icons/brand_icons.dart';
 import 'package:musicorum/pages/extended_items_list.dart';
 import 'package:musicorum/pages/home.dart';
 import 'package:musicorum/utils/common.dart';
@@ -107,6 +111,52 @@ class ArtistPageState extends State<ArtistPage> {
     setState(() {});
   }
 
+  openSheet() {
+    MoreBottomSheet.openBottomSheet(
+        context: context,
+        item: MoreBottomSheet(
+          image: Image.network(artist.resource.image).image,
+          radius: 90.0,
+          title: fullArtist.name ?? widget._artist.name,
+          items: [
+            ListTile(
+              title: Text('Open on Last.fm'),
+              leading: Icon(Icons.open_in_browser_rounded),
+              onTap: () {
+                AndroidIntent intent = AndroidIntent(
+                  action: 'action_view',
+                  data: widget._artist.url,
+                );
+
+                intent.launch();
+              },
+            ),
+            ListTile(
+              title: Text('Open on Spotify'),
+              leading: SvgPicture.asset(
+                  'assets/icons/spotify.svg',
+                  semanticsLabel: 'Spotify Logo'
+              ),
+              onTap: () {
+                  AndroidIntent intent = AndroidIntent(
+                    action: 'action_view',
+                    data: 'spotify:artist:' + fullArtist.resource.spotify,
+                  );
+
+                  intent.launch();
+              },
+            ),
+            ListTile(
+              title: Text('Share'),
+              leading: Icon(Icons.share_rounded),
+              onTap: () {
+                Share.text(widget._artist.name, widget._artist.url, 'text/plain');
+              },
+            )
+          ],
+        ));
+  }
+
   Future<void> _refresh() async {
     await _fetchData();
   }
@@ -136,8 +186,13 @@ class ArtistPageState extends State<ArtistPage> {
             TrackListItem(track: t, type: TrackListItemDisplayType.PLAYCOUNT))
         .toList();
 
-    var topAlbumsItems =
-        _getItemsList(topAlbums).map((t) => AlbumListItem(album: t, artist: artist, user: widget.user,)).toList();
+    var topAlbumsItems = _getItemsList(topAlbums)
+        .map((t) => AlbumListItem(
+              album: t,
+              artist: artist,
+              user: widget.user,
+            ))
+        .toList();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -146,6 +201,12 @@ class ArtistPageState extends State<ArtistPage> {
         radius: 16,
         name: artist.name,
         notifier: _scrollOffsetNotifier,
+        actions: [
+          IconButton(
+              tooltip: "More",
+              icon: Icon(Icons.more_vert_rounded),
+              onPressed: openSheet)
+        ],
       ),
       body: MediaQuery.removePadding(
           context: context,
@@ -155,8 +216,14 @@ class ArtistPageState extends State<ArtistPage> {
               ContentHeader(
                 loaded: true,
                 name: artist.name,
-                imageViewURL: artist.resource != null && artist.resource.image != null ? artist.resource.image : null,
-                mainImage: artist.resource != null && artist.resource.image != null ? Image.network(artist.resource.image).image : null,
+                imageViewURL:
+                    artist.resource != null && artist.resource.image != null
+                        ? artist.resource.image
+                        : null,
+                mainImage:
+                    artist.resource != null && artist.resource.image != null
+                        ? Image.network(artist.resource.image).image
+                        : null,
                 backgroundImage: backgroundImage != null
                     ? Image.network(backgroundImage).image
                     : null,
@@ -314,7 +381,12 @@ class ArtistPageState extends State<ArtistPage> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    WikiCard(artist.wiki, predominantColor: predominantColor, title: 'Biography', subTitle: artist.name,)
+                    WikiCard(
+                      artist.wiki,
+                      predominantColor: predominantColor,
+                      title: 'Biography',
+                      subTitle: artist.name,
+                    )
                   ],
                 ),
               ),

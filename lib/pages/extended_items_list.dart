@@ -11,7 +11,7 @@ class ExtendedItemsListPage extends StatelessWidget {
   final List<Widget> items;
 
   static openItemsPage(BuildContext context, String title, String subTitle,
-      List<Widget> items) {
+      List<dynamic> items) {
     Navigator.push(
       context,
       MaterialPageRoute(
