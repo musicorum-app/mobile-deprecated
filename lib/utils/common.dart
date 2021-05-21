@@ -52,4 +52,12 @@ class CommonUtils {
          maximumColorCount: 20);
      return CommonUtils.getDarkPredominantColor(paletteGenerator);
    }
+
+   static int parseInt(dynamic value) {
+     if (value.runtimeType == String) {
+       return int.parse(value);
+     } else {
+       return value;
+     }
+   }
 }

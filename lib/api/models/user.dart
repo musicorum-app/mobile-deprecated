@@ -1,6 +1,7 @@
 import 'package:musicorum/api/models/image.dart';
 import 'package:musicorum/api/models/types.dart';
 import 'package:musicorum/constants/common.dart';
+import 'package:musicorum/utils/common.dart';
 
 class User {
   User(this.playCount, this.name, this.username, this.url, this.country,
@@ -26,7 +27,7 @@ class User {
     final List images = json['image'] as List;
 
     return User(
-        int.parse(json['playcount']),
+        CommonUtils.parseInt(json['playcount']),
         json['realname'],
         json['name'],
         json['url'],

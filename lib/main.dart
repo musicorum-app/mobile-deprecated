@@ -69,6 +69,7 @@ class _AccountHandlerState extends State<AccountHandler> {
     loggedIn = await storage.containsKey(key: STORAGE_TOKEN_KEY);
     final token = await storage.read(key: STORAGE_TOKEN_KEY);
     final loginState = Provider.of<AuthState>(context, listen: false);
+    loginState.rootNavigator = Navigator.of(context);
 
     if (loggedIn) {
       loginState.login(token);

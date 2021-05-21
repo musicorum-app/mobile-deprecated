@@ -3,7 +3,9 @@ import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
 import 'package:musicorum/pages/image_viewer_page.dart';
+import 'package:musicorum/states/login.dart';
 import 'package:musicorum/utils/common.dart';
+import 'package:provider/provider.dart';
 
 const CONTENT_HEADER_IMAGE_FACTOR = 1.3;
 
@@ -134,8 +136,7 @@ class ContentHeader extends StatelessWidget {
 
                   ),
                   onTap: () {
-                    Navigator.push(
-                      context,
+                    Provider.of<AuthState>(context, listen: false).rootNavigator.push(
                       MaterialPageRoute(
                         builder: (context) =>
                             ImageViewerPage(Image.network(imageViewURL).image, imageViewURL, loadingColor, name),

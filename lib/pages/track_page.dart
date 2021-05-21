@@ -1,3 +1,4 @@
+import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/lastfm.dart';
 import 'package:musicorum/api/models/album.dart';
@@ -13,16 +14,20 @@ import 'package:musicorum/components/content_stat.dart';
 import 'package:musicorum/components/items/placeholder.dart';
 import 'package:musicorum/components/items/track_list_item.dart';
 import 'package:musicorum/components/items/view_more_list_item.dart';
+import 'package:musicorum/components/more_bottom_sheet.dart';
 import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/components/tags_fragment.dart';
 import 'package:musicorum/components/two_layered_appbar.dart';
 import 'package:musicorum/components/wiki_card.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
+import 'package:musicorum/pages/album_page.dart';
 import 'package:musicorum/pages/artist.dart';
 import 'package:musicorum/pages/extended_items_list.dart';
 import 'package:musicorum/states/login.dart';
 import 'package:musicorum/utils/common.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:provider/provider.dart';
 
 class TrackPage extends StatefulWidget {
@@ -94,6 +99,7 @@ class TrackPageState extends State<TrackPage> {
     setState(() {
       fullTrack = _trackData;
     });
+    fullTrack.getResource();
     if (mainImage != null) {
       predominantColor =
           await CommonUtils.getDarkPredominantColorFromImageProvider(
@@ -139,6 +145,76 @@ class TrackPageState extends State<TrackPage> {
     return items != null ? items : [];
   }
 
+  _openSheet() {
+    MoreBottomSheet.openBottomSheet(
+        context: context,
+        item: MoreBottomSheet(
+            image: mainImage,
+            title: track.name,
+            subTitle: track.artist,
+            items: [
+              ListTile(
+                title: Text('Go to artist'),
+                leading: Icon(Icons.person_rounded),
+                onTap: () {
+                  Provider.of<AuthState>(context, listen: false).rootNavigator.pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ArtistPage(artist, widget.user),
+                    ),
+                  );
+                }
+              ),
+              ListTile(
+                title: Text('Go to album'),
+                leading: Icon(Icons.album_rounded),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('Open on Last.fm'),
+                leading: Icon(Icons.open_in_browser_rounded),
+                onTap: () {
+                  AndroidIntent intent = AndroidIntent(
+                    action: 'action_view',
+                    data: track.url,
+                  );
+
+                  intent.launch();
+                },
+              ),
+              ListTile(
+                title: Text('Open on Spotify'),
+                leading: SvgPicture.asset(
+                    'assets/icons/spotify.svg',
+                    semanticsLabel: 'Spotify Logo'
+                ),
+                onTap: () {
+                  AndroidIntent intent = AndroidIntent(
+                    action: 'action_view',
+                    data: 'spotify:track:' + track.resource.spotify,
+                  );
+
+                  intent.launch();
+                },
+              ),
+              ListTile(
+                title: Text('Share'),
+                leading: Icon(Icons.share_rounded),
+                onTap: () {
+                  Share.text(track.name + ' by ' + track.artist, track.url, 'text/plain');
+                },
+              )
+            ]
+        ));
+  }
+
+  _favorite () {
+    ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+      content: new Text((track.userLoved ? 'Unfavorited' : 'Favorited') + ' (maybe not)'),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     var similarTracks = _getItemsList(similar)
@@ -153,6 +229,15 @@ class TrackPageState extends State<TrackPage> {
         secondary: track.artist,
         image: mainImage,
         notifier: _scrollOffsetNotifier,
+        actions: [
+          IconButton(
+            tooltip: track.userLoved ? 'Unfavorite' : 'Favorite',
+              icon: Icon(track.userLoved ? Icons.favorite_rounded : Icons.favorite_border_rounded),
+        onPressed: fullTrack != null ? _favorite : null,
+          color: track.userLoved ? MUSICORUM_COLOR : null,),
+          IconButton(
+              icon: Icon(Icons.more_vert_rounded), onPressed: _openSheet),
+        ],
       ),
       body: MediaQuery.removePadding(
           context: context,
@@ -167,7 +252,11 @@ class TrackPageState extends State<TrackPage> {
                 mainImage: mainImage,
                 backgroundImage: backgroundImage,
                 loadingColor: predominantColor,
-                imageViewURL: track.images != null && !track.images.isNull ? track.images.getImageURLFromSize(1600, 0) : (track.resource != null && track.resource.image != null ? track.resource.image : null),
+                imageViewURL: track.images != null && !track.images.isNull
+                    ? track.images.getImageURLFromSize(1600, 0)
+                    : (track.resource != null && track.resource.image != null
+                        ? track.resource.image
+                        : null),
                 onSecondaryTap: () {
                   Navigator.push(
                     context,
@@ -215,7 +304,9 @@ class TrackPageState extends State<TrackPage> {
                     ),
                     ContentItemList(
                       name: 'Similar tracks',
-                      items: fetchedSimilarTracks && (similar == null || (similar != null && similar.length == 0))
+                      items: fetchedSimilarTracks &&
+                              (similar == null ||
+                                  (similar != null && similar.length == 0))
                           ? [
                               Center(
                                 child: Text('Nothing found.'),

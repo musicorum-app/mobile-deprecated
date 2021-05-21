@@ -3,6 +3,9 @@ import 'package:musicorum/api/models/image.dart';
 import 'package:musicorum/api/models/track.dart';
 import 'package:musicorum/api/models/types.dart';
 import 'package:musicorum/api/models/wiki.dart';
+import 'package:musicorum/utils/common.dart';
+import 'package:musicorum/utils/common.dart';
+import 'package:musicorum/utils/common.dart';
 
 enum AlbumType { TOP_ALBUMS, ALBUM_INFO }
 
@@ -72,9 +75,9 @@ class Album {
       artist: json['artist'],
       url: json['url'],
       images: lfmImages,
-      playCount: json['userplaycount'],
-      globalPlayCount: int.parse(json['playcount']),
-      listeners: int.parse(json['listeners']),
+      playCount: CommonUtils.parseInt(json['userplaycount']),
+      globalPlayCount: CommonUtils.parseInt(json['playcount']),
+      listeners: CommonUtils.parseInt(json['listeners']),
       wiki: json['wiki'] != null ? Wiki.fromJSONWithoutURL(json['wiki'], json['url'] + '/+wiki') : null,
       tracks: tracks
           .map((t) => Track.fromAlbumInfoTracksJSON(t, lfmImages))

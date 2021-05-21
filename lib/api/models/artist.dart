@@ -5,6 +5,9 @@ import 'package:musicorum/api/models/image.dart';
 import 'package:musicorum/api/models/wiki.dart';
 import 'package:musicorum/api/musicorum.dart';
 import 'package:musicorum/constants/common.dart';
+import 'package:musicorum/utils/common.dart';
+import 'package:musicorum/utils/common.dart';
+import 'package:musicorum/utils/common.dart';
 
 class Artist {
   final String name;
@@ -62,9 +65,9 @@ class Artist {
     return Artist(
       name: json['name'],
       url: json['url'],
-      playCount: json['stats']['userplaycount'],
-      globalPlayCount: json['stats']['playcount'],
-      listeners: json['stats']['listeners'],
+      playCount: CommonUtils.parseInt(json['stats']['userplaycount']),
+      globalPlayCount: CommonUtils.parseInt(json['stats']['playcount']),
+      listeners: CommonUtils.parseInt(json['stats']['listeners']),
       tags: _tags.map((t) => Tag(t['name'], t['url'])).toList(),
       similar:
           _similar.map((a) => Artist(name: a['name'], url: a['url'])).toList(),

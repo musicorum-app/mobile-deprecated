@@ -4,6 +4,10 @@ import 'package:musicorum/api/models/track_resource.dart';
 import 'package:musicorum/api/models/types.dart';
 import 'package:musicorum/api/models/wiki.dart';
 import 'package:musicorum/api/musicorum.dart';
+import 'package:musicorum/utils/common.dart';
+import 'package:musicorum/utils/common.dart';
+import 'package:musicorum/utils/common.dart';
+import 'package:musicorum/utils/common.dart';
 
 enum TrackType { RECENT_TRACKS, TOP_TRACKS, ALBUM_TRACKS, TRACK_INFO }
 
@@ -24,7 +28,8 @@ class Track {
       this.listeners,
       this.resource,
       this.duration,
-      this.userLoved});
+      this.userLoved = false
+      });
 
   final TrackType type;
   final String name;
@@ -112,10 +117,10 @@ class Track {
     return Track(TrackType.TRACK_INFO,
         name: json['name'],
         url: json['url'],
-        duration: int.parse(json['duration']),
-        listeners: int.parse(json['listeners']),
-        playCount: int.parse(json['userplaycount']),
-        globalPlayCount: int.parse(json['playcount']),
+        duration: CommonUtils.parseInt(json['duration']),
+        listeners: CommonUtils.parseInt(json['listeners']),
+        playCount: CommonUtils.parseInt(json['userplaycount']),
+        globalPlayCount: CommonUtils.parseInt(json['playcount']),
         artist: json['artist']['name'],
         album: hasAlbum ? json['album']['title'] : null,
         images: hasAlbum

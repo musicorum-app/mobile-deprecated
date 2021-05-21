@@ -5,11 +5,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:musicorum/constants/storage_keys.dart';
 
 class AuthState extends ChangeNotifier {
+  AuthState({this.rootNavigator});
   String token;
   User user;
 
   bool get isLoggedIn => token != null;
   bool get isUserLoaded => user != null;
+
+  NavigatorState rootNavigator;
 
   void login(String tk) {
     token = tk;
