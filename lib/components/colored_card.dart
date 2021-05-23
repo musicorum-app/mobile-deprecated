@@ -16,6 +16,15 @@ class ColoredCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
 
+  static LinearGradient createGradient (Color mainColor) {
+    return LinearGradient(
+        colors: mainColor != null
+        ? [mainColor, mainColor.toTinyColor().lighten(18).color]
+        : [GRADIENT_DEFAULT_1, GRADIENT_DEFAULT_2],
+        begin: Alignment.bottomLeft,
+        end: Alignment.topRight);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -23,12 +32,7 @@ class ColoredCard extends StatelessWidget {
       child: Ink(
         padding: padding,
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: mainColor != null
-                    ? [mainColor, mainColor.toTinyColor().lighten(18).color]
-                    : [GRADIENT_DEFAULT_1, GRADIENT_DEFAULT_2],
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight),
+            gradient: createGradient(mainColor),
             color: Color.fromRGBO(0, 0, 0, 0.8),
             borderRadius: BorderRadius.circular(borderRadius)),
         child: child,

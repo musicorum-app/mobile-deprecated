@@ -100,7 +100,7 @@ class Track {
         name: json['name'],
         artist: json['artist']['name'],
         url: json['url'],
-        rank: json['@attr']['rank'],
+        rank: CommonUtils.parseInt(json['@attr']['rank']),
         images: images);
   }
 

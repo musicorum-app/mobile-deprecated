@@ -194,6 +194,7 @@ class ProfileState extends State<Profile> {
                   children: [
                     ContentItemList(
                       name: 'Recent scrobbles',
+
                       items: loaded
                           ? [
                               ...recentScrobblesItems.take(5),
@@ -218,6 +219,7 @@ class ProfileState extends State<Profile> {
                     ),
                     ContentItemList(
                       name: 'Top artists',
+                      subtitle: 'All time',
                       items: loaded && topArtistsOverall == null
                           ? [
                               Center(
@@ -251,6 +253,7 @@ class ProfileState extends State<Profile> {
                     ),
                     ContentItemList(
                       name: 'Top albums',
+                        subtitle: 'All time',
                       items: loaded && topAlbums == null
                           ? [
                               Center(
@@ -284,6 +287,7 @@ class ProfileState extends State<Profile> {
                     ),
                     ContentItemList(
                       name: 'Top tracks',
+    subtitle: 'All time',
                       items: loaded && topTracks == null
                           ? [
                               Center(

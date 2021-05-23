@@ -34,6 +34,8 @@ class LoggedInRouterState extends State<LoggedInRouter> {
       AccountPage()
     ];
 
+    onChangePage();
+
     super.initState();
   }
 
@@ -45,9 +47,20 @@ class LoggedInRouterState extends State<LoggedInRouter> {
     GlobalKey<NavigatorState>(),
   ];
 
+  onChangePage () {
+    Provider.of<AuthState>(context, listen: false).selectedBottomItem = page;
+  }
+
+  int get page => _page;
+
+  set page(int p) {
+    _page = p;
+    onChangePage();
+  }
+
   Widget _buildPageOffstage(GlobalKey<NavigatorState> key, int index) {
     return Offstage(
-      offstage: _page != index,
+      offstage: page != index,
       child: CustomNavigator(
         navigatorKey: key,
         home: pages[index],
@@ -76,17 +89,17 @@ class LoggedInRouterState extends State<LoggedInRouter> {
                   backgroundColor: SURFACE_SECONDARY_COLOR,
                   selectedItemColor: Colors.white,
                   type: BottomNavigationBarType.fixed,
-                  currentIndex: _page,
+                  currentIndex: page,
                   showUnselectedLabels: false,
                   showSelectedLabels: true,
                   onTap: (int index) {
-                    if (index == _page) {
+                    if (index == page) {
                       navigatorKeys[index].currentState.popUntil((
                           route) => route.isFirst);
                       return;
                     }
                     setState(() {
-                      _page = index;
+                      page = index;
                     });
                   },
                   items: destinations
@@ -109,10 +122,10 @@ class LoggedInRouterState extends State<LoggedInRouter> {
         !await navigatorKeys[_page].currentState.maybePop();
         if (isFirstRouteInCurrentTab) {
           // if not on the 'main' tab
-          if (_page != 0) {
+          if (page != 0) {
             // select 'main' tab
             setState(() {
-              _page = 0;
+              page = 0;
             });
             // back button handled by app
             return false;

@@ -14,6 +14,8 @@ class AuthState extends ChangeNotifier {
 
   NavigatorState rootNavigator;
 
+  int selectedBottomItem = 0;
+
   void login(String tk) {
     token = tk;
     notifyListeners();
