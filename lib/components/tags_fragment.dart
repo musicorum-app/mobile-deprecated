@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/models/tag.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/pages/tag_page.dart';
 import 'package:tinycolor/tinycolor.dart';
 
@@ -77,8 +78,8 @@ class TagsFragment extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => TagPage(tags[index]),
+                    createPageRoute(
+                      TagPage(tags[index]),
                     ));
               },
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/models/user.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/constants/common.dart';
 import 'package:musicorum/pages/profile.dart';
 import 'package:musicorum/pages/profile_page.dart';
@@ -16,8 +17,8 @@ class UserListItem extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ProfilePage(user),
+          createPageRoute(
+            ProfilePage(user),
           ),
         );
       },

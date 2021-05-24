@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/components/two_layered_appbar.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
@@ -14,8 +15,8 @@ class ExtendedItemsListPage extends StatelessWidget {
       List<dynamic> items) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => ExtendedItemsListPage(
+      createPageRoute(
+        ExtendedItemsListPage(
           title: title,
           subTitle: subTitle,
           items: items.cast<Widget>(),

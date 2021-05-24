@@ -20,6 +20,7 @@ import 'package:musicorum/components/items/track_list_item.dart';
 import 'package:musicorum/components/items/view_more_list_item.dart';
 import 'package:musicorum/components/list_content.dart';
 import 'package:musicorum/components/more_bottom_sheet.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/components/tags_fragment.dart';
 import 'package:musicorum/components/wiki_card.dart';
 import 'package:musicorum/constants/colors.dart';
@@ -183,7 +184,7 @@ class ArtistPageState extends State<ArtistPage> {
   Widget build(BuildContext context) {
     var topTracksItems = _getItemsList(topTracks)
         .map((t) =>
-            TrackListItem(track: t, type: TrackListItemDisplayType.PLAYCOUNT))
+            TrackListItem(track: t, type: TrackListItemDisplayType.PLAYCOUNT,))
         .toList();
 
     var topAlbumsItems = _getItemsList(topAlbums)
@@ -364,8 +365,8 @@ class ArtistPageState extends State<ArtistPage> {
                                             onTap: () {
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
+                                                createPageRoute(
+
                                                         ArtistPage(
                                                             artist
                                                                 .similar[index],

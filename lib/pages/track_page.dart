@@ -15,6 +15,7 @@ import 'package:musicorum/components/items/placeholder.dart';
 import 'package:musicorum/components/items/track_list_item.dart';
 import 'package:musicorum/components/items/view_more_list_item.dart';
 import 'package:musicorum/components/more_bottom_sheet.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/components/tags_fragment.dart';
 import 'package:musicorum/components/two_layered_appbar.dart';
@@ -160,8 +161,8 @@ class TrackPageState extends State<TrackPage> {
                   Provider.of<AuthState>(context, listen: false).rootNavigator.pop();
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => ArtistPage(artist, widget.user),
+                    createPageRoute(
+                      ArtistPage(artist, widget.user),
                     ),
                   );
                 }
@@ -260,8 +261,8 @@ class TrackPageState extends State<TrackPage> {
                 onSecondaryTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => ArtistPage(artist, widget.user),
+                    createPageRoute(
+                      ArtistPage(artist, widget.user),
                     ),
                   );
                 },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/models/artist.dart';
 import 'package:musicorum/api/models/user.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
 import 'package:musicorum/pages/artist.dart';
@@ -20,8 +21,8 @@ class ArtistListItem extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ArtistPage(artist, user),
+          createPageRoute(
+            ArtistPage(artist, user),
           ),
         );
       },

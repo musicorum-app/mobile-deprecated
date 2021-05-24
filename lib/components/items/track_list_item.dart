@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/models/track.dart';
 import 'package:musicorum/api/models/user.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
@@ -28,10 +30,9 @@ class TrackListItem extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) =>
-                TrackPage(track, Provider.of<AuthState>(context).user),
-          ),
+          createPageRoute(
+              TrackPage(
+                  track, Provider.of<AuthState>(context, listen: false).user)),
         );
       },
       child: Container(
@@ -59,8 +60,7 @@ class TrackListItem extends StatelessWidget {
                   )
                 : RoundedImage(
                     type == TrackListItemDisplayType.RECENT_SCROBBLE
-                        ? track.images.large != null &&
-                                track.images.large != ''
+                        ? track.images.large != null && track.images.large != ''
                             ? track.images.large
                             : track.images.defaultImageURL
                         : track.resource != null &&

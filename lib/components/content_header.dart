@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
@@ -137,11 +138,7 @@ class ContentHeader extends StatelessWidget {
                   ),
                   onTap: () {
                     Provider.of<AuthState>(context, listen: false).rootNavigator.push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ImageViewerPage(Image.network(imageViewURL).image, imageViewURL, loadingColor, name),
-                      ),
-                    );
+                      createPageRoute(ImageViewerPage(Image.network(imageViewURL).image, imageViewURL, loadingColor, name),));
                   },
               )
                   : Container()),

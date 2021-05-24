@@ -6,6 +6,7 @@ import 'package:musicorum/api/models/track.dart';
 import 'package:musicorum/api/models/types.dart';
 import 'package:musicorum/api/models/user.dart';
 import 'package:musicorum/components/list_content.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/components/title.dart';
 import 'package:musicorum/constants/colors.dart';
@@ -129,8 +130,8 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                             Provider.of<AuthState>(context, listen: false)
                                 .rootNavigator
                                 .push(
-                                  MaterialPageRoute(
-                                      builder: (context) => SettingsPage()),
+                              createPageRoute(
+                                     SettingsPage()),
                                 ))
                   ],
                 ),
@@ -263,8 +264,8 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AlbumPage(
+                                    createPageRoute(
+                                         AlbumPage(
                                           album,
                                           null,
                                           user: user,

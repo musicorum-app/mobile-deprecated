@@ -7,9 +7,10 @@ const SURFACE_SECONDARY_TEXT_COLOR = Color(0x99FFFFFF);
 const MUSICORUM_COLOR = Color(0xffB71C1C);
 const MUSICORUM_LIGHT = Color(0xffEB5757);
 
-const PLACEHOLDER_COLOR = Color(0x20ffffff);
+const PLACEHOLDER_COLOR = Color(0xff2b2b2b);
+const PLACEHOLDER_PULSE_COLOR = Color(0xff404040);
 
 const APPBAR_COLOR = Color(0xff1c1c1c);
 
 const GRADIENT_DEFAULT_1 = Color.fromRGBO(255, 255, 255, 0.08);
-const GRADIENT_DEFAULT_2 = Color.fromRGBO(255, 255, 255, 0.14);
+const GRADIENT_DEFAULT_2 = Color.fromRGBO(255, 255, 255, 0.18);

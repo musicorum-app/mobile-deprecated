@@ -3,6 +3,7 @@ import 'package:musicorum/api/models/album.dart';
 import 'package:musicorum/api/models/artist.dart';
 import 'package:musicorum/api/models/track.dart';
 import 'package:musicorum/api/models/user.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/components/rounded_image.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
@@ -25,8 +26,7 @@ class AlbumListItem extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => AlbumPage(album, artist, user: this.user),
+          createPageRoute(AlbumPage(album, artist, user: this.user),
           ),
         );
       },

@@ -3,10 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:musicorum/api/models/tag.dart';
 import 'package:musicorum/components/content_item_list.dart';
 import 'package:musicorum/components/content_stat.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/components/tags_fragment.dart';
 import 'package:musicorum/components/wiki_card.dart';
 import 'package:musicorum/constants/colors.dart';
 import 'package:musicorum/constants/common.dart';
+import 'package:musicorum/pages/artist.dart';
+import 'package:musicorum/pages/home.dart';
 import 'package:musicorum/utils/common.dart';
 
 class TagPage extends StatefulWidget {
@@ -42,19 +45,18 @@ class TagPageState extends State<TagPage> {
     super.initState();
   }
 
-  _resolveImage () {
+  _resolveImage() {
     final resource = tag.topArtists[0].resource;
     if (resource == null || resource.image == null) return;
     setState(() {
-      mainImage =
-          Image.network(tag.topArtists[0].resource.image).image;
+      mainImage = Image.network(tag.topArtists[0].resource.image).image;
     });
 
     CommonUtils.getDarkPredominantColorFromImageProvider(
-        mainImage, Colors.white.withAlpha(50))
+            mainImage, Colors.white.withAlpha(50))
         .then((value) => setState(() {
-      predominantColor = value;
-    }));
+              predominantColor = value;
+            }));
   }
 
   _fetchData(bool force) async {
@@ -141,12 +143,13 @@ class TagPageState extends State<TagPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ContentStat(
-                        text: 'Used', value: tag.total),
+                    ContentStat(text: 'Used', value: tag.total),
                     ContentStat(text: 'Users', value: tag.reach)
                   ],
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: LIST_PADDING),
                   child: Column(
@@ -156,6 +159,72 @@ class TagPageState extends State<TagPage> {
                         title: 'About',
                         subTitle: tag.name,
                         predominantColor: predominantColor,
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: LIST_PADDING),
+                  child: Column(
+                    children: [
+                      ContentItemList(
+                        name: 'Artists',
+                        items: [
+                          Container(
+                            height: 100,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount:
+                              tag.topArtists != null ? tag.topArtists.length : 5,
+                              itemBuilder: (context, index) {
+                                if (tag.topArtists == null)
+                                  return Container(
+                                    margin: EdgeInsets.only(
+                                        left: index == 0 ? 0.0 : 12.0),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: PLACEHOLDER_COLOR),
+                                    width: SCROLL_ITEM_SIZE,
+                                    height: SCROLL_ITEM_SIZE,
+                                  );
+                                else {
+                                  final artist = tag.topArtists[index];
+                                  return Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Container(
+                                        margin: EdgeInsets.zero,
+                                        child: Material(
+                                          shape: CircleBorder(),
+                                          clipBehavior: Clip.hardEdge,
+                                          color: Colors.transparent,
+                                          child: Ink.image(
+                                              image: Image.network(
+                                                  artist.imageURL)
+                                                  .image,
+                                              width: SCROLL_ITEM_SIZE,
+                                              height: SCROLL_ITEM_SIZE,
+                                              fit: BoxFit.cover,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    createPageRoute(
+                                                            ArtistPage(
+                                                                artist,
+                                                                null)),
+                                                  );
+                                                },
+                                              )),
+                                        )),
+                                  );
+                                }
+                              },
+                            ),
+                          )
+                        ],
                       )
                     ],
                   ),

@@ -13,16 +13,16 @@ class ContentStat extends StatelessWidget {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            NumberFormat.compact().format(value != null ? value : 0),
-            textAlign: TextAlign.start,
+            value != null ? NumberFormat.compact().format(value) : '-',
+            textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 28),
           ),
           Text(
             text.toUpperCase(),
-            textAlign: TextAlign.start,
+            textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w800,

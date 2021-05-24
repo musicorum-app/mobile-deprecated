@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicorum/api/models/wiki.dart';
 import 'package:musicorum/components/colored_card.dart';
+import 'package:musicorum/components/musicorum_page_route.dart';
 import 'package:musicorum/pages/wiki_page.dart';
 
 class WikiCard extends StatelessWidget {
@@ -32,8 +33,8 @@ class WikiCard extends StatelessWidget {
         ));
         else Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => WikiPage(wiki, predominantColor, title, subTitle)));
+            createPageRoute(
+                WikiPage(wiki, predominantColor, title, subTitle)));
       },
       mainColor: predominantColor,
       padding: EdgeInsets.all(16.0),

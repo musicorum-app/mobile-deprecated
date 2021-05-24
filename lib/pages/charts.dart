@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:musicorum/components/charts_personal_view.dart';
 import 'package:musicorum/components/items/placeholder.dart';
 import 'package:musicorum/components/title.dart';
 import 'package:musicorum/constants/colors.dart';
@@ -45,10 +47,9 @@ class ChartsPageState extends State<ChartsPage> {
                 ))
           ],
           body: TabBarView(
+            // physics: BouncingScrollPhysics(),
             children: [
-              ListView.builder(
-                itemBuilder: (context, index) => ListItemPlaceholder(),
-              ),
+              ChartsPersonalView(),
               Text('geo')
             ],
           ),
